@@ -1,6 +1,6 @@
 # kutiha
 
-KUTIHAN ensimmäinen versio 0.1
+KUTIHA:n ensimmäinen versio 0.1
 
 Ominaisuudet:
 - Näyttää kaikki käyttäjätiedot
