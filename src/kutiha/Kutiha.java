@@ -36,24 +36,24 @@ public class Kutiha {
             // handle the error
         }
 
-        Connection conn = null;
-
-        System.out.println("Kulunvalvonnan Tietokannan Hallintasovellus (KUTIHA) 0.1");
+        System.out.println("Kulunvalvontatietokannan Hallintasovellus (KUTIHA) 0.11");
 
         Scanner scanner = new Scanner(System.in);
-        Scanner scanner1 = new Scanner(System.in);
+        Scanner scanner2 = new Scanner(System.in);
+        Scanner scanner3 = new Scanner(System.in);
         //Scanner scanner1 = new Scanner(System.in);
         kysely k = new kysely();
         int valinta;
         boolean quit = false;
         String tallennus;
         int hakuID;
+        String hakuNimi;
 
         do {
             System.out.println("\nValinnat:\n");
             System.out.println("1. Näytä kaikki käyttäjätiedot");
-            System.out.println("2. Tapahtumahaku henkilön mukaan");
-            System.out.println("3. TODO");
+            System.out.println("2. Tapahtumahaku henkilötunnisteen mukaan");
+            System.out.println("3. Tapahtumahaku henkilön mukaan");
             System.out.println("4. TODO");
             System.out.println("5. Poistu \n \n");
             System.out.print("Anna valinta: ");
@@ -63,13 +63,16 @@ public class Kutiha {
                 case 1:
                     k.kyselyUsers();
                     break;
-                case 2:                   
+                case 2:
                     System.out.println("Syötä käyttäjän ID");
-                    hakuID = scanner1.nextInt();
+                    hakuID = scanner2.nextInt();
                     k.kyselyTapahtumatByID(hakuID);
                     break;
                 case 3:
-                    System.out.println("TODO");
+                    System.out.println("Käyttäjät:");
+                    k.kyselyNimet();
+                    System.out.println("Syötä nimi: ");
+                    hakuNimi  = scanner3.nextLine();  //TODO!!!!!!!!!
                     break;
                 case 4:
                     System.out.println("TODO");
@@ -79,8 +82,10 @@ public class Kutiha {
                     quit = true;
                     break;
                 default:
-                    for (int i = 0; i < 50; ++i) System.out.println();
-                    System.out.println("Tuntematon valinta");               
+                    for (int i = 0; i < 50; ++i) {
+                        System.out.println();
+                    }
+                    System.out.println("Tuntematon valinta");
             }
         } while (!quit);
     }

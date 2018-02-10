@@ -14,12 +14,10 @@ import java.nio.file.Paths;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import static java.sql.JDBCType.VARCHAR;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import static java.sql.Types.VARCHAR;
 import java.util.Scanner;
 
 /**
@@ -37,7 +35,6 @@ public class kysely {
     private final String kayttajat = "kayttajat.txt"; //tallennettavien tekstitiedostojen nimet ja sijainnit
     private final String tapahtumat_by_ID = "tapahtumat_temp.txt"; //tällä hetkellä tallentuvat javaprojektin kansioon
 
-    
     //mysql-yhteyden avaaminen
     public void loadDriver() {
         try {
@@ -52,8 +49,8 @@ public class kysely {
         }
     }
 
-    
-  // kysely käyttäjistä tietokannasta
+    // kysely käyttäjistä tietokannasta
+    //Valinta 1
     public void kyselyUsers() throws SQLException, IOException {
 
         loadDriver();
@@ -61,30 +58,26 @@ public class kysely {
         try {
             stmt = conn.createStatement();
             String sql;
-            sql = "SELECT ID, Nimi, PIN, OikeusSisa, OikeusUlko FROM kuti.users";
-            ResultSet rs = stmt.executeQuery(sql);
+            sql = "SELECT user_ID, name, pin FROM kuti.users";
+            rs = stmt.executeQuery(sql);
 
             while (rs.next()) {
                 //Haku sarakkeiden nimellä
-                int id = rs.getInt("ID");
-                int pin = rs.getInt("PIN");
-                String Nimi = rs.getString("Nimi");
-                String OikeusSisa = rs.getString("OikeusSisa");
-                String OikeusUlko = rs.getString("OikeusUlko");
+                int id = rs.getInt("user_ID");
+                int pin = rs.getInt("pin");
+                String Nimi = rs.getString("name");
 
                 //Tulosten printtaus
                 System.out.print("ID: " + id);
-                System.out.print(", Nimi: " + Nimi);
-                System.out.print(", PIN: " + pin);
-                System.out.print(", OikeusSisa: " + OikeusSisa);
-                System.out.println(", OikeusUlko: " + OikeusUlko);
-
+                //System.out.print(" | Nimi: " + Nimi + "\t \t");
+                System.out.format(" | Nimi: %-20s", Nimi);
+                System.out.println(" | PIN: " + pin);
             }
-            
+
             /* 
             Yksinkertainen switch-case tapahtuma, kysyy tallennetaanko 
             Tuttu c-kielen perusteista
-            */
+             */
             System.out.println("\nTallennetaanko? k/e");
             Scanner scanner1 = new Scanner(System.in);
             String tallennus;
@@ -95,23 +88,22 @@ public class kysely {
                     /*
                     Tällä hetkellä tallennus-vaihtoehto tekee uuden haun tietokannalta
                     Vaatii lisää tutkimista
-                    */
+                     */
                     stmt = conn.createStatement();
-                    sql = "SELECT ID, Nimi, PIN, OikeusSisa, OikeusUlko FROM kuti.users";
+                    sql = "SELECT user_ID, name, pin FROM kuti.users";
                     rs = stmt.executeQuery(sql);
-                    
+
+
                     /*
                     Kuten aiemmin käytettiin println tulosten näyttämiseen, 
                     tässä tapauksessa tehdään sama, mutta tekstitiedostoon
-                    */
-                    
+                     */
                     try (BufferedWriter out = new BufferedWriter(new FileWriter(kayttajat))) {
                         while (rs.next()) {
-                            out.write("ID: " + Integer.toString(rs.getInt("ID")));
-                            out.write(", Nimi: " + rs.getString("Nimi"));
-                            out.write(", PIN: " + Integer.toString(rs.getInt("pin")));
-                            out.write(", OikeusSisa: " + rs.getString("OikeusSisa"));
-                            out.write(", OikeusUlko: " + rs.getString("OikeusUlko"));
+                            out.write("ID: " + Integer.toString(rs.getInt("user_ID")));
+                            //out.write(" | Nimi: " + rs.getString("name"));
+                            out.write(" | Nimi: " + String.format("%-20s", rs.getString("name")));
+                            out.write(" | PIN: " + Integer.toString(rs.getInt("pin")));
                             out.newLine();
                         }
                         //Tulostetaan 50-riviä tyhjää, miellyttää silmää ja tekee käyttöliittymämäisen tunnelman konsolisovellukseen
@@ -165,36 +157,36 @@ public class kysely {
      * @throws SQLException
      * @throws IOException
      */
-    
     //Uusi metodi tapahtumien hakuun käyttäjä-ID:n perusteella. Käyttäjä syöttää ID:n pääohjelmassa ja tulee luokalle ID_in inttinä
+    //Käyttäjän valinta 2:
     public void kyselyTapahtumatByID(int ID_in) throws SQLException, IOException {
 
         loadDriver();
 
         //käytetään tietoturvallista PreparedStatementtia
         try {
-            PreparedStatement haeID = conn.prepareStatement("SELECT pvm, aika, ovi_ID, user_ID, nimi, virheet FROM kuti.tapahtumat WHERE user_ID=?");
+            PreparedStatement haeID = conn.prepareStatement("SELECT event, aika, ovi_ID, user_ID, name, error  FROM kuti.tapahtumat WHERE user_ID=?");
             // käytetään hakua rajaavaa WHERE, jossa user_ID=?
             haeID.setInt(1, ID_in);
             // ylemmällä rivillä annetaan haun ?-merkille arvo, ID_in. 1 tarkoittaa ekaa ?-merkkiä ja ID_in mikä arvo siihen laitetaan
-            ResultSet rsID = haeID.executeQuery();
+            rs = haeID.executeQuery();
 
-            while (rsID.next()) {
+            while (rs.next()) {
                 //Haku sarakkeiden nimellä
-                String pvm = rsID.getString("pvm");
-                String aika = rsID.getString("aika");
-                int userID = rsID.getInt("user_ID");
-                String oviID = rsID.getString("ovi_ID");
-                String Nimi = rsID.getString("nimi");
-                int virheet = rsID.getInt("virheet");
+                int event = rs.getInt("event");
+                String aika = rs.getString("aika");
+                int userID = rs.getInt("user_ID");
+                String oviID = rs.getString("ovi_ID");
+                String name = rs.getString("name");
+                int error = rs.getInt("error");
 
                 //Tulostus tuttuun tapaan
-                System.out.print(pvm);
-                System.out.print(" " + aika);
-                System.out.print(" / ID: " + userID);
-                System.out.print(" / Nimi: " + Nimi);
-                System.out.print(" / Ovi: " + oviID);
-                System.out.println(" / Virheitä: " + virheet);
+                System.out.print(String.format("%04d", event));
+                System.out.print(" | " + aika);
+                System.out.print(" | ID: " + userID);
+                System.out.print(" | Nimi: " + name);
+                System.out.print(" | Ovi: " + oviID);
+                System.out.println(" | Tapahtuma: " + error);
 
             }
             System.out.println("\nTallennetaanko? k/e");
@@ -205,18 +197,18 @@ public class kysely {
             switch (tallennusID) {
                 case "k":
                     //Tallennus kuten aiemmin                   
-                    haeID = conn.prepareStatement("SELECT pvm, aika, ovi_ID, user_ID, nimi, virheet FROM kuti.tapahtumat WHERE user_ID=?");
+                    haeID = conn.prepareStatement("SELECT event, aika, ovi_ID, user_ID, name, error  FROM kuti.tapahtumat WHERE user_ID=?");
                     haeID.setInt(1, ID_in);
-                    rsID = haeID.executeQuery();
-                
+                    rs = haeID.executeQuery();
+
                     try (BufferedWriter out = new BufferedWriter(new FileWriter(tapahtumat_by_ID))) {
-                        while (rsID.next()) {
-                            out.write(" " + rsID.getString("pvm"));
-                            out.write(" / " + rsID.getString("aika"));
-                            out.write(" / ID: " + Integer.toString(rsID.getInt("user_ID")));
-                            out.write(" / Nimi: " + rsID.getString("nimi"));
-                            out.write(" / Ovi: " + rsID.getString("ovi_ID"));
-                            out.write(" / Virheitä: " + Integer.toString(rsID.getInt("virheet")));
+                        while (rs.next()) {
+                            out.write(" " + Integer.toString(rs.getInt("event")));
+                            out.write(" | " + rs.getString("aika"));
+                            out.write(" | ID: " + Integer.toString(rs.getInt("user_ID")));
+                            out.write(" | Nimi: " + rs.getString("name"));
+                            out.write(" | Ovi: " + rs.getString("ovi_ID"));
+                            out.write(" | Tapahtuma: " + Integer.toString(rs.getInt("error")));
                             out.newLine();
                         }
                         for (int i = 0; i < 50; ++i) {
@@ -267,4 +259,55 @@ public class kysely {
         }
 
     }
+
+    //henkilöiden listaus
+    public void kyselyNimet() throws SQLException, IOException {
+
+        loadDriver();
+
+        try {
+            stmt = conn.createStatement();
+            String sql;
+            sql = "SELECT name FROM kuti.users";
+            rs = stmt.executeQuery(sql);
+            
+            while (rs.next()) {
+                //Haku sarakkeiden nimellä
+                String Nimi = rs.getString("name");
+                //Tulosten printtaus
+                System.out.println(Nimi);
+            }
+
+        } catch (SQLException ex) {
+            // handle any errors
+            sqlMesg = "SQLException: " + ex.getMessage();
+            sqlState = "SQLState: " + ex.getSQLState();
+            vendorError = "VendorError: " + ex.getErrorCode();
+        } finally {
+            // it is a good idea to release
+            // resources in a finally{} block
+            // in reverse-order of their creation
+            // if they are no-longer needed
+
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException sqlEx) {
+                } // ignore
+
+                rs = null;
+            }
+
+            if (stmt != null) {
+                try {
+                    stmt.close();
+                } catch (SQLException sqlEx) {
+                } // ignore
+
+                stmt = null;
+            }
+        }
+
+    }
+
 }

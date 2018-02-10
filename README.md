@@ -1,4 +1,4 @@
-# kutiha
+﻿# kutiha
 
 KUTIHA:n ensimmäinen versio 0.1
 
@@ -14,3 +14,10 @@ TODO:
 - Login-ominaisuus kuten KUTI:ssa (login.properties), pitäisi olla helppo ottaa käyttöön
 - Exceliin vienti? Ei vaikuttanut nopealla tutkimuksella kovinkaan helpolle. .csv-muotoon saa kyllä tallennettua mutta ei saa järkevästi käyttämään excel-taulukoita
 - Mitä tässä keksiikään
+
+CHANGELOG
+
+0.11
+- Päivitetty  tukemaan uusinta tietokannan versiota
+- Aloitettu tekemään hakua henkilön perusteella
+- Nimetty haku rfid:n mukaan uudelleen
