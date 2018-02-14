@@ -165,7 +165,7 @@ public class kysely {
 
         //käytetään tietoturvallista PreparedStatementtia
         try {
-            PreparedStatement haeID = conn.prepareStatement("SELECT event, aika, ovi_ID, user_ID, name, error  FROM kuti.tapahtumat WHERE user_ID=?");
+            PreparedStatement haeID = conn.prepareStatement("SELECT log_number, aika, ovi_ID, user_ID, name, event  FROM kuti.tapahtumat WHERE user_ID=?");
             // käytetään hakua rajaavaa WHERE, jossa user_ID=?
             haeID.setInt(1, ID_in);
             // ylemmällä rivillä annetaan haun ?-merkille arvo, ID_in. 1 tarkoittaa ekaa ?-merkkiä ja ID_in mikä arvo siihen laitetaan
@@ -173,20 +173,20 @@ public class kysely {
 
             while (rs.next()) {
                 //Haku sarakkeiden nimellä
-                int event = rs.getInt("event");
+                int log_number = rs.getInt("log_number");
                 String aika = rs.getString("aika");
                 int userID = rs.getInt("user_ID");
                 String oviID = rs.getString("ovi_ID");
                 String name = rs.getString("name");
-                int error = rs.getInt("error");
+                int event = rs.getInt("event");
 
                 //Tulostus tuttuun tapaan
-                System.out.print(String.format("%04d", event));
+                System.out.print(String.format("%04d", log_number));
                 System.out.print(" | " + aika);
                 System.out.print(" | ID: " + userID);
                 System.out.print(" | Nimi: " + name);
                 System.out.print(" | Ovi: " + oviID);
-                System.out.println(" | Tapahtuma: " + error);
+                System.out.println(" | Tapahtuma: " + event);
 
             }
             System.out.println("\nTallennetaanko? k/e");
@@ -197,18 +197,18 @@ public class kysely {
             switch (tallennusID) {
                 case "k":
                     //Tallennus kuten aiemmin                   
-                    haeID = conn.prepareStatement("SELECT event, aika, ovi_ID, user_ID, name, error  FROM kuti.tapahtumat WHERE user_ID=?");
+                    haeID = conn.prepareStatement("SELECT log_number, aika, ovi_ID, user_ID, name, event  FROM kuti.tapahtumat WHERE user_ID=?");
                     haeID.setInt(1, ID_in);
                     rs = haeID.executeQuery();
 
                     try (BufferedWriter out = new BufferedWriter(new FileWriter(tapahtumat_by_ID))) {
                         while (rs.next()) {
-                            out.write(" " + Integer.toString(rs.getInt("event")));
+                            out.write(" " + Integer.toString(rs.getInt("log_number")));
                             out.write(" | " + rs.getString("aika"));
                             out.write(" | ID: " + Integer.toString(rs.getInt("user_ID")));
                             out.write(" | Nimi: " + rs.getString("name"));
                             out.write(" | Ovi: " + rs.getString("ovi_ID"));
-                            out.write(" | Tapahtuma: " + Integer.toString(rs.getInt("error")));
+                            out.write(" | Tapahtuma: " + Integer.toString(rs.getInt("event")));
                             out.newLine();
                         }
                         for (int i = 0; i < 50; ++i) {
