@@ -9,11 +9,9 @@ Ominaisuudet:
 - Tallentaa luotuja raportteja .txt-tiedostoon
   - Tallennetut raportit menevät java-projektin kansioon
 
-TODO:
-- Loput SPRINT2 kohdat
-- Login-ominaisuus kuten KUTI:ssa (login.properties), pitäisi olla helppo ottaa käyttöön
+MASTER TODO:
 - Exceliin vienti? Ei vaikuttanut nopealla tutkimuksella kovinkaan helpolle. .csv-muotoon saa kyllä tallennettua mutta ei saa järkevästi käyttämään excel-taulukoita
-- Mitä tässä keksiikään
+
 
 CHANGELOG
 
@@ -21,3 +19,10 @@ CHANGELOG
 - Päivitetty  tukemaan uusinta tietokannan versiota
 - Aloitettu tekemään hakua henkilön perusteella
 - Nimetty haku rfid:n mukaan uudelleen
+
+0.6
+- Versionimeäminen sprintin mukaan
+- Koodia siivottu
+- Tuki 14.2.2018 päivitetylle tietokannalle
+TODO: - Haku henkilön mukaan loppuun
+TODO: - Loput sprint2-kohdat
