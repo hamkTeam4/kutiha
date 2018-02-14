@@ -24,6 +24,7 @@ CHANGELOG
 - Versionimeäminen sprintin mukaan
 - Koodia siivottu
 - Tuki 14.2.2018 päivitetylle tietokannalle
+
 TODO: 
 - Haku henkilön mukaan loppuun
 - Loput sprint2-kohdat
