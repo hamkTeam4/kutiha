@@ -7,12 +7,7 @@ package kutiha;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import static java.lang.System.in;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Scanner;
 
 /**
@@ -23,21 +18,22 @@ public class Kutiha {
 
     /**
      * @param args the command line arguments
+     * @throws java.sql.SQLException
+     * @throws java.io.FileNotFoundException
      */
     public static void main(String[] args) throws SQLException, FileNotFoundException, IOException {
-        // TODO code application logic here
-
-        try {
+        
+       try {
             // The newInstance() call is a work around for some
             // broken Java implementations
 
             Class.forName("com.mysql.jdbc.Driver").newInstance();
-        } catch (Exception ex) {
+        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException ex) {
             // handle the error
         }
 
-        System.out.println("Kulunvalvontatietokannan Hallintasovellus (KUTIHA) 0.11");
-
+        System.out.println("Kulunvalvontatietokannan Hallintasovellus");
+        System.out.println("KUTIHA 0.6");
         Scanner scanner = new Scanner(System.in);
         Scanner scanner2 = new Scanner(System.in);
         Scanner scanner3 = new Scanner(System.in);
@@ -50,6 +46,7 @@ public class Kutiha {
         String hakuNimi;
 
         do {
+            System.out.println("_________________________________________");
             System.out.println("\nValinnat:\n");
             System.out.println("1. Näytä kaikki käyttäjätiedot");
             System.out.println("2. Tapahtumahaku henkilötunnisteen mukaan");
@@ -72,7 +69,7 @@ public class Kutiha {
                     System.out.println("Käyttäjät:");
                     k.kyselyNimet();
                     System.out.println("Syötä nimi: ");
-                    hakuNimi  = scanner3.nextLine();  //TODO!!!!!!!!!
+                    hakuNimi = scanner3.nextLine();  //TODO!!!!!!!!!
                     break;
                 case 4:
                     System.out.println("TODO");
