@@ -35,5 +35,11 @@ CHANGELOG
 - version mukainen nimeäminen
 - The most hienoin ascii ulkoasu
 
+0.8.1
+- Kaikki printtaukset ja tallennukset formatoituu nyt oikein
+	- Nimille varataan tila
+	- event_id:t saavat alkuun nollat
+
 TODO: 
 - Eipä kait mittään.
+
