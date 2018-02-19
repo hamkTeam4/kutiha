@@ -22,8 +22,8 @@ public class Kutiha {
      * @throws java.io.FileNotFoundException
      */
     public static void main(String[] args) throws SQLException, FileNotFoundException, IOException {
-        
-       try {
+
+        try {
             // The newInstance() call is a work around for some
             // broken Java implementations
 
@@ -32,11 +32,25 @@ public class Kutiha {
             // handle the error
         }
 
-        System.out.println("Kulunvalvontatietokannan Hallintasovellus");
-        System.out.println("KUTIHA 0.6");
+        System.out.println("*********************************************");
+        System.out.println("*                                           *");
+        System.out.println("* KULUNVALVONTATIETOKANNAN HALLINTASOVELLUS *");
+        System.out.println("*                KUTIHA 0.7                 *");
+        System.out.println("*                                           *");
+        System.out.println("*********************************************");
+
+        System.out.println("*********************************************");
+        System.out.println("*          (C)2018 HAMK INTIM17A6           *");
+        System.out.println("*             Kalliojärvi Alix              *");
+        System.out.println("*             Kivioja Miska                 *");
+        System.out.println("*             Koivusalo Kimmo               *");
+        System.out.println("*             Laitinen Jonne                *");
+        System.out.println("*********************************************");
+
         Scanner scanner = new Scanner(System.in);
         Scanner scanner2 = new Scanner(System.in);
         Scanner scanner3 = new Scanner(System.in);
+        Scanner scanner4 = new Scanner(System.in);
         //Scanner scanner1 = new Scanner(System.in);
         kysely k = new kysely();
         int valinta;
@@ -44,15 +58,17 @@ public class Kutiha {
         String tallennus;
         int hakuID;
         String hakuNimi;
+        int hakuEvent;
 
         do {
-            System.out.println("_________________________________________");
+            System.out.println("_____________________________________________");
             System.out.println("\nValinnat:\n");
             System.out.println("1. Näytä kaikki käyttäjätiedot");
             System.out.println("2. Tapahtumahaku henkilötunnisteen mukaan");
             System.out.println("3. Tapahtumahaku henkilön mukaan");
-            System.out.println("4. TODO");
-            System.out.println("5. Poistu \n \n");
+            System.out.println("4. Tapahtumahaku tapahtumaluokan mukaan");
+            System.out.println("5. Poistu");
+            System.out.println("_____________________________________________\n");
             System.out.print("Anna valinta: ");
             valinta = scanner.nextInt();
 
@@ -68,14 +84,23 @@ public class Kutiha {
                 case 3:
                     System.out.println("Käyttäjät:");
                     k.kyselyNimet();
-                    System.out.println("Syötä nimi: ");
-                    hakuNimi = scanner3.nextLine();  //TODO!!!!!!!!!
+                    System.out.println("\nSyötä nimi: ");
+                    hakuNimi = scanner3.nextLine();
+                    k.kyselyTapahtumatByNimi(hakuNimi);
                     break;
                 case 4:
-                    System.out.println("TODO");
+                    System.out.println("Tapahtumat:\n");
+                    System.out.println("1=OPEN");
+                    System.out.println("2=ILLEGAL RFID");
+                    System.out.println("3=NO ENTRY");
+                    System.out.println("4=WRONG PIN\n");
+                    System.out.println("Syötä tapahtumaluokka:");
+                    hakuEvent = scanner4.nextInt();
+                    k.kyselyTapahtumatByTapahtuma(hakuEvent);
                     break;
                 case 5:
                     // quit.
+                    System.out.println("Olet poistunut sovelluksesta - TURVALLISESTI.");
                     quit = true;
                     break;
                 default:
