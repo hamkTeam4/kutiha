@@ -5,8 +5,12 @@
  */
 package kutiha;
 
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.sql.SQLException;
 import java.util.Scanner;
 
@@ -35,7 +39,7 @@ public class Kutiha {
         System.out.println("*********************************************");
         System.out.println("*                                           *");
         System.out.println("* KULUNVALVONTATIETOKANNAN HALLINTASOVELLUS *");
-        System.out.println("*                KUTIHA 0.7                 *");
+        System.out.println("*                KUTIHA 0.8.1                 *");
         System.out.println("*                                           *");
         System.out.println("*********************************************");
 
@@ -68,6 +72,7 @@ public class Kutiha {
             System.out.println("3. Tapahtumahaku henkilön mukaan");
             System.out.println("4. Tapahtumahaku tapahtumaluokan mukaan");
             System.out.println("5. Poistu");
+            System.out.println("6. README.md");
             System.out.println("_____________________________________________\n");
             System.out.print("Anna valinta: ");
             valinta = scanner.nextInt();
@@ -103,12 +108,31 @@ public class Kutiha {
                     System.out.println("Olet poistunut sovelluksesta - TURVALLISESTI.");
                     quit = true;
                     break;
+                case 6:
+                    try {
+                        // Printtaa readme.md:n projektin kansiosta                      
+                        FileInputStream fstream = new FileInputStream("README.md");
+                        // uudet oliot
+                        DataInputStream in = new DataInputStream(fstream);
+                        BufferedReader br = new BufferedReader(new InputStreamReader(in));
+                        String strLine;
+                        //Rivi riviltä tekstitiedoston lukeminen
+                        while ((strLine = br.readLine()) != null) {                           
+                            System.out.println(strLine);
+                        }
+                        //inputti kiinni
+                        in.close();
+                    } catch (Exception e) {
+                        System.err.println("Error: " + e.getMessage());
+                    }
+                    break;
                 default:
                     for (int i = 0; i < 50; ++i) {
                         System.out.println();
                     }
                     System.out.println("Tuntematon valinta");
             }
+
         } while (!quit);
     }
 }

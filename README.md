@@ -39,6 +39,7 @@ CHANGELOG
 - Kaikki printtaukset ja tallennukset formatoituu nyt oikein
 	- Nimille varataan tila
 	- event_id:t saavat alkuun nollat
+- Uusi switch 6: printtaa README.md:n projektin juuresta
 
 TODO: 
 - Eipä kait mittään.
