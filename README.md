@@ -25,6 +25,15 @@ CHANGELOG
 - Koodia siivottu
 - Tuki 14.2.2018 päivitetylle tietokannalle
 
+0.7
+- haku henkilön mukaan
+- tallennus henkilön mukaan
+
+0.8
+- haku tapahtuman mukaan
+- tallennus tapahtuman mukaan
+- version mukainen nimeäminen
+- The most hienoin ascii ulkoasu
+
 TODO: 
-- Haku henkilön mukaan loppuun
-- Loput sprint2-kohdat
+- Eipä kait mittään.
