@@ -38,7 +38,7 @@ public class kysely {
     //mysql-yhteyden avaaminen:
     public void loadDriver() {
         try {
-            conn = DriverManager.getConnection("jdbc:mysql://localhost/kuti?" + "user=root&password=root");
+            conn = DriverManager.getConnection("jdbc:mysql://localhost/kuti?" + "user=root&password=");
 
         } catch (SQLException ex) {
             // handle any errors
@@ -67,8 +67,7 @@ public class kysely {
                 String Nimi = rs.getString("name");
 
                 //Tulosten printtaus
-                System.out.print("ID: " + id);
-                //System.out.print(" | Nimi: " + Nimi + "\t \t");
+                System.out.print("ID: " + id);               
                 System.out.format(" | Nimi: %-20s", Nimi);
                 System.out.println(" | PIN: " + pin);
             }
@@ -99,8 +98,7 @@ public class kysely {
                      */
                     try (BufferedWriter out = new BufferedWriter(new FileWriter(kayttajat))) {
                         while (rs.next()) {
-                            out.write("ID: " + Integer.toString(rs.getInt("user_ID")));
-                            //out.write(" | Nimi: " + rs.getString("name"));
+                            out.write("ID: " + Integer.toString(rs.getInt("user_ID")));                           
                             out.write(" | Nimi: " + String.format("%-20s", rs.getString("name")));
                             out.write(" | PIN: " + Integer.toString(rs.getInt("pin")));
                             out.newLine();
@@ -200,15 +198,15 @@ public class kysely {
                     haeID = conn.prepareStatement("SELECT log_number, aika, ovi_ID, user_ID, name, event  FROM kuti.tapahtumat WHERE user_ID=?");
                     haeID.setInt(1, ID_in);
                     rs = haeID.executeQuery();
-
+                    
                     try (BufferedWriter out = new BufferedWriter(new FileWriter(tapahtumat_by_ID))) {
-                        while (rs.next()) {
-                            out.write(" " + Integer.toString(rs.getInt("log_number")));
+                        while (rs.next()) {    
+                            out.write(" " + String.format("%04d",rs.getInt("log_number")));                         
                             out.write(" | " + rs.getString("aika"));
-                            out.write(" | ID: " + Integer.toString(rs.getInt("user_ID")));
+                            out.write(" | ID: " + rs.getInt("user_ID"));                           
                             out.write(" | Nimi: " + rs.getString("name"));
                             out.write(" | Ovi: " + rs.getString("ovi_ID"));
-                            out.write(" | Tapahtuma: " + Integer.toString(rs.getInt("event")));
+                            out.write(" | Tapahtuma: " + rs.getInt("event"));
                             out.newLine();
                         }
                         for (int i = 0; i < 50; ++i) {
@@ -342,7 +340,7 @@ public class kysely {
                 System.out.print(String.format("%04d", log_number));
                 System.out.print(" | " + aika);
                 System.out.print(" | ID: " + userID);
-                System.out.print(" | Nimi: " + name);
+                System.out.format(" | Nimi: %-20s", name);
                 System.out.print(" | Ovi: " + oviID);
                 System.out.println(" | Tapahtuma: " + event);
 
@@ -363,12 +361,12 @@ public class kysely {
 
                     try (BufferedWriter out = new BufferedWriter(new FileWriter(tapahtumat_by_ID))) {
                         while (rs.next()) {
-                            out.write(" " + Integer.toString(rs.getInt("log_number")));
+                            out.write(" " + String.format("%04d",rs.getInt("log_number")));
                             out.write(" | " + rs.getString("aika"));
-                            out.write(" | ID: " + Integer.toString(rs.getInt("user_ID")));
+                            out.write(" | ID: " + rs.getInt("user_ID"));
                             out.write(" | Nimi: " + rs.getString("name"));
                             out.write(" | Ovi: " + rs.getString("ovi_ID"));
-                            out.write(" | Tapahtuma: " + Integer.toString(rs.getInt("event")));
+                            out.write(" | Tapahtuma: " + rs.getInt("event"));
                             out.newLine();
                         }
                         for (int i = 0; i < 50; ++i) {
@@ -450,7 +448,7 @@ public class kysely {
                 System.out.print(String.format("%04d", log_number));
                 System.out.print(" | " + aika);
                 System.out.print(" | ID: " + userID);
-                System.out.print(" | Nimi: " + name);
+                System.out.format(" | Nimi: %-20s", name);
                 System.out.print(" | Ovi: " + oviID);
                 System.out.println(" | Tapahtuma: " + event);
 
@@ -469,12 +467,12 @@ public class kysely {
 
                     try (BufferedWriter out = new BufferedWriter(new FileWriter(tapahtumat_by_ID))) {
                         while (rs.next()) {
-                            out.write(" " + Integer.toString(rs.getInt("log_number")));
+                            out.write(" " + String.format("%04d",rs.getInt("log_number")));
                             out.write(" | " + rs.getString("aika"));
-                            out.write(" | ID: " + Integer.toString(rs.getInt("user_ID")));
-                            out.write(" | Nimi: " + rs.getString("name"));
+                            out.write(" | ID: " + rs.getInt("user_ID"));
+                            out.write(" | Nimi: " + String.format("%-20s", rs.getString("name")));
                             out.write(" | Ovi: " + rs.getString("ovi_ID"));
-                            out.write(" | Tapahtuma: " + Integer.toString(rs.getInt("event")));
+                            out.write(" | Tapahtuma: " + rs.getInt("event"));
                             out.newLine();
                         }
                         for (int i = 0; i < 50; ++i) {
