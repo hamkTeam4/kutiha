@@ -39,7 +39,10 @@ CHANGELOG
 - Kaikki printtaukset ja tallennukset formatoituu nyt oikein
 	- Nimille varataan tila
 	- event_id:t saavat alkuun nollat
+	
+0.9
+- Lisätty haku ovien mukaan
 
 TODO: 
-- Eipä kait mittään.
+- Haku ajan mukaan. 
 
