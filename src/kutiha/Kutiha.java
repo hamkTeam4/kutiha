@@ -41,7 +41,7 @@ public class Kutiha {
         System.out.println("*********************************************");
         System.out.println("*                                           *");
         System.out.println("* KULUNVALVONTATIETOKANNAN HALLINTASOVELLUS *");
-        System.out.println("*                KUTIHA 0.8.1                 *");
+        System.out.println("*                KUTIHA 1.0                 *");
         System.out.println("*                                           *");
         System.out.println("*********************************************");
 
@@ -78,9 +78,9 @@ public class Kutiha {
             System.out.println("3. Tapahtumahaku henkilön mukaan");
             System.out.println("4. Tapahtumahaku tapahtumaluokan mukaan");
             System.out.println("5. Tapahtumahaku oven mukaan");
-            //System.out.println("6. Haku päivämäärän mukaan");
-            System.out.println("6. Poistu");
-            System.out.println("7. README.md");
+            System.out.println("6. Haku päivämäärän mukaan");           
+            System.out.println("7. Poistu");           
+            System.out.println("8. README.md");
             System.out.println("_____________________________________________\n");
             System.out.print("Anna valinta: ");
             valinta = scanner.nextInt();
@@ -124,18 +124,18 @@ public class Kutiha {
                     hakuOvi = scanner5.nextLine();
                     k.kyselyTapahtumatByOvi(hakuOvi);
                     break;
-                /*case 6:
-                    System.out.println("\nSyötä haettavan päivän tapahtumat:");
+                case 6:
+                    System.out.println("\nSyötä haettavien tapahtumien päivämäärä:");
                     System.out.println("Syötä aika muodossa vvvv-kk-pp");
                     hakuAika = scanner6.nextLine();
                     k.kyselyTapahtumatByAika(hakuAika);
-                    break;*/
-                case 6:
+                    break;
+                case 7:
                     // quit.
                     System.out.println("Olet poistunut sovelluksesta - TURVALLISESTI.");
                     quit = true;
                     break;
-                case 7:
+                case 8:
                     try {
                         // Printtaa readme.md:n projektin kansiosta                      
                         FileInputStream fstream = new FileInputStream("README.md");

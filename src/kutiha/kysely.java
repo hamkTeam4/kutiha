@@ -1,4 +1,4 @@
-*
+/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -576,13 +576,13 @@ public class kysely {
                      {
                         try (BufferedWriter out = new BufferedWriter(new FileWriter(tapahtumat_by_ID))) {
                             while (rs.next()) {
-                                out.write(" " + String.format("%04d", rs.getInt("log_number")));
-                                out.write(" | " + rs.getString("aika"));
-                                out.write(" | ID: " + rs.getInt("user_ID"));
-                                out.write(" | Nimi: " + rs.getString("name"));
-                                out.write(" | Ovi: " + rs.getString("ovi_ID"));
-                                out.write(" | Tapahtuma: " + rs.getInt("event"));
-                                out.newLine();
+                            out.write(" " + String.format("%04d", rs.getInt("log_number")));
+                            out.write(" | " + rs.getString("aika"));
+                            out.write(" | ID: " + rs.getInt("user_ID"));
+                            out.write(" | Nimi: " + String.format("%-20s", rs.getString("name")));
+                            out.write(" | Ovi: " + rs.getString("ovi_ID"));
+                            out.write(" | Tapahtuma: " + rs.getInt("event"));
+                            out.newLine();
                             }
                             for (int i = 0; i < 50; ++i) {
                                 System.out.println();
@@ -640,21 +640,17 @@ public class kysely {
     }
 
     //VALINTA AJAN MUKAAN, KESKEN
-    /*
-    public void kyselyTapahtumatByAika(String Aika_in) throws SQLException, IOException, ParseException {
+    
+    public void kyselyTapahtumatByAika(String Aika_in) throws SQLException, IOException {
 
         loadDriver();
         try {
 
-            PreparedStatement haeAika = conn.prepareStatement("SELECT log_number, aika, ovi_ID, user_ID, name, event  FROM kuti.tapahtumat WHERE aika >= '?' AND  aika <'?' ");
+            PreparedStatement haeAika = conn.prepareStatement("SELECT log_number, aika, ovi_ID, user_ID, name, event  FROM kuti.tapahtumat WHERE aika BETWEEN ? AND ?");
 
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-            java.util.Date startDate = formatter.parse(Aika_in);
-            haeAika.setDate(1, new java.sql.Date(startDate.getTime()));
-            //haeAika.setDate(2, new java.sql.Date(startDate.getTime()+1));
-            // käytetään hakua rajaavaa WHERE, jossa aika=?
-            //haeAika.setString(1, Aika_in);
-            // ylemmällä rivillä annetaan haun ?-merkille arvo, Aika. 1 tarkoittaa ekaa ?-merkkiä ja Aika_in mikä arvo siihen laitetaan
+            haeAika.setString(1, Aika_in + " 00:00.000000");
+            haeAika.setString(2, Aika_in + " 23:59.000000");
+            
             rs = haeAika.executeQuery();
 
             while (rs.next()) {
@@ -685,20 +681,23 @@ public class kysely {
             switch (tallennusAika) {
                 case "k":
                     //Tallennus kuten aiemmin                   
-                    haeAika = conn.prepareStatement("SELECT log_number, aika, ovi_ID, user_ID, name, event  FROM kuti.tapahtumat WHERE aika = %");
-                    haeAika.setString(1, Aika_in + '%');
+                    haeAika = conn.prepareStatement("SELECT log_number, aika, ovi_ID, user_ID, name, event  FROM kuti.tapahtumat WHERE aika BETWEEN ? AND ?");
+                    System.out.println("\nDebug1");
+                    haeAika.setString(1, Aika_in + " 00:00.000000");
+                    haeAika.setString(2, Aika_in + " 23:59.000000");
+                    System.out.println("\nDebug2");
                     rs = haeAika.executeQuery();
-
+                    System.out.println("\nDebug3");
                      {
                         try (BufferedWriter out = new BufferedWriter(new FileWriter(tapahtumat_by_ID))) {
                             while (rs.next()) {
-                                out.write(" " + String.format("%04d", rs.getInt("log_number")));
-                                out.write(" | " + rs.getString("aika" + '%'));
-                                out.write(" | ID: " + rs.getInt("user_ID"));
-                                out.write(" | Nimi: " + rs.getString("name"));
-                                out.write(" | Ovi: " + rs.getString("ovi_ID"));
-                                out.write(" | Tapahtuma: " + rs.getInt("event"));
-                                out.newLine();
+                            out.write(" " + String.format("%04d", rs.getInt("log_number")));
+                            out.write(" | " + rs.getString("aika"));
+                            out.write(" | ID: " + rs.getInt("user_ID"));
+                            out.write(" | Nimi: " + String.format("%-20s", rs.getString("name")));
+                            out.write(" | Ovi: " + rs.getString("ovi_ID"));
+                            out.write(" | Tapahtuma: " + rs.getInt("event"));
+                            out.newLine();
                             }
                             for (int i = 0; i < 50; ++i) {
                                 System.out.println();
@@ -721,6 +720,7 @@ public class kysely {
                 default:
                     System.out.println("Tuntematon valinta");
             }
+
             //3.VALINTA TALLENNUS PÄÄTTYY 
 
         } catch (SQLException ex) {
@@ -751,5 +751,6 @@ public class kysely {
 
                 stmt = null;
             }
-        }*/
+        }
+}
 }
