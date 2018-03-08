@@ -78,7 +78,7 @@ public class Kutiha {
             System.out.println("3. Tapahtumahaku henkilön mukaan");
             System.out.println("4. Tapahtumahaku tapahtumaluokan mukaan");
             System.out.println("5. Tapahtumahaku oven mukaan");
-            System.out.println("6. Haku päivämäärän mukaan");           
+            System.out.println("6. Tapahtumahaku päivämäärän mukaan");           
             System.out.println("7. Poistu");           
             System.out.println("8. README.md");
             System.out.println("_____________________________________________\n");

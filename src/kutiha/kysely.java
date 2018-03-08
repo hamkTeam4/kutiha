@@ -650,7 +650,7 @@ public class kysely {
 
             haeAika.setString(1, Aika_in + " 00:00.000000");
             haeAika.setString(2, Aika_in + " 23:59.000000");
-            
+            rs = null;
             rs = haeAika.executeQuery();
 
             while (rs.next()) {
@@ -681,13 +681,10 @@ public class kysely {
             switch (tallennusAika) {
                 case "k":
                     //Tallennus kuten aiemmin                   
-                    haeAika = conn.prepareStatement("SELECT log_number, aika, ovi_ID, user_ID, name, event  FROM kuti.tapahtumat WHERE aika BETWEEN ? AND ?");
-                    System.out.println("\nDebug1");
+                    haeAika = conn.prepareStatement("SELECT log_number, aika, ovi_ID, user_ID, name, event  FROM kuti.tapahtumat WHERE aika BETWEEN ? AND ?");                   
                     haeAika.setString(1, Aika_in + " 00:00.000000");
-                    haeAika.setString(2, Aika_in + " 23:59.000000");
-                    System.out.println("\nDebug2");
-                    rs = haeAika.executeQuery();
-                    System.out.println("\nDebug3");
+                    haeAika.setString(2, Aika_in + " 23:59.000000");                 
+                    rs = haeAika.executeQuery();                   
                      {
                         try (BufferedWriter out = new BufferedWriter(new FileWriter(tapahtumat_by_ID))) {
                             while (rs.next()) {
@@ -753,4 +750,5 @@ public class kysely {
             }
         }
 }
-}
+    }
+
