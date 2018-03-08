@@ -18,6 +18,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+//import java.text.ParseException; //liittyvät ajan mukaan valintaan
+//import java.text.SimpleDateFormat; // liittyvät ajan mukaan valintaan
 import java.util.Scanner;
 
 /**
@@ -34,6 +36,7 @@ public class kysely {
     private String vendorError;
     private final String kayttajat = "kayttajat.txt"; //tallennettavien tekstitiedostojen nimet ja sijainnit
     private final String tapahtumat_by_ID = "tapahtumat_temp.txt"; //tällä hetkellä tallentuvat javaprojektin kansioon
+    private String tapahtumat_By_Ovi;
 
     //mysql-yhteyden avaaminen:
     public void loadDriver() {
@@ -67,7 +70,7 @@ public class kysely {
                 String Nimi = rs.getString("name");
 
                 //Tulosten printtaus
-                System.out.print("ID: " + id);               
+                System.out.print("ID: " + id);
                 System.out.format(" | Nimi: %-20s", Nimi);
                 System.out.println(" | PIN: " + pin);
             }
@@ -98,7 +101,7 @@ public class kysely {
                      */
                     try (BufferedWriter out = new BufferedWriter(new FileWriter(kayttajat))) {
                         while (rs.next()) {
-                            out.write("ID: " + Integer.toString(rs.getInt("user_ID")));                           
+                            out.write("ID: " + Integer.toString(rs.getInt("user_ID")));
                             out.write(" | Nimi: " + String.format("%-20s", rs.getString("name")));
                             out.write(" | PIN: " + Integer.toString(rs.getInt("pin")));
                             out.newLine();
@@ -198,12 +201,12 @@ public class kysely {
                     haeID = conn.prepareStatement("SELECT log_number, aika, ovi_ID, user_ID, name, event  FROM kuti.tapahtumat WHERE user_ID=?");
                     haeID.setInt(1, ID_in);
                     rs = haeID.executeQuery();
-                    
+
                     try (BufferedWriter out = new BufferedWriter(new FileWriter(tapahtumat_by_ID))) {
-                        while (rs.next()) {    
-                            out.write(" " + String.format("%04d",rs.getInt("log_number")));                         
+                        while (rs.next()) {
+                            out.write(" " + String.format("%04d", rs.getInt("log_number")));
                             out.write(" | " + rs.getString("aika"));
-                            out.write(" | ID: " + rs.getInt("user_ID"));                           
+                            out.write(" | ID: " + rs.getInt("user_ID"));
                             out.write(" | Nimi: " + rs.getString("name"));
                             out.write(" | Ovi: " + rs.getString("ovi_ID"));
                             out.write(" | Tapahtuma: " + rs.getInt("event"));
@@ -361,7 +364,7 @@ public class kysely {
 
                     try (BufferedWriter out = new BufferedWriter(new FileWriter(tapahtumat_by_ID))) {
                         while (rs.next()) {
-                            out.write(" " + String.format("%04d",rs.getInt("log_number")));
+                            out.write(" " + String.format("%04d", rs.getInt("log_number")));
                             out.write(" | " + rs.getString("aika"));
                             out.write(" | ID: " + rs.getInt("user_ID"));
                             out.write(" | Nimi: " + rs.getString("name"));
@@ -467,7 +470,7 @@ public class kysely {
 
                     try (BufferedWriter out = new BufferedWriter(new FileWriter(tapahtumat_by_ID))) {
                         while (rs.next()) {
-                            out.write(" " + String.format("%04d",rs.getInt("log_number")));
+                            out.write(" " + String.format("%04d", rs.getInt("log_number")));
                             out.write(" | " + rs.getString("aika"));
                             out.write(" | ID: " + rs.getInt("user_ID"));
                             out.write(" | Nimi: " + String.format("%-20s", rs.getString("name")));
@@ -523,4 +526,229 @@ public class kysely {
         }
 
     }
+
+    public void kyselyTapahtumatByOvi(String Ovi_in) throws SQLException, IOException {
+
+        loadDriver();
+        //Nimilistan tulostus päättyy.
+        //Suoritetaan valinta, ja tulsotetaan lista valitun henkilön mukaan..
+        try {
+
+            PreparedStatement haeOvi = conn.prepareStatement("SELECT log_number, aika, ovi_ID, user_ID, name, event  FROM kuti.tapahtumat WHERE ovi_ID=?");
+
+            // käytetään hakua rajaavaa WHERE, jossa name=?
+            haeOvi.setString(1, Ovi_in);
+            // ylemmällä rivillä annetaan haun ?-merkille arvo, name. 1 tarkoittaa ekaa ?-merkkiä ja Nimi_in mikä arvo siihen laitetaan
+            rs = haeOvi.executeQuery();
+
+            while (rs.next()) {
+                //Haku sarakkeiden nimellä
+                int log_number = rs.getInt("log_number");
+                String aika = rs.getString("aika");
+                int userID = rs.getInt("user_ID");
+                String oviID = rs.getString("ovi_ID");
+                String name = rs.getString("name");
+                int event = rs.getInt("event");
+
+                //Tulostus tuttuun tapaan
+                System.out.print(String.format("%04d", log_number));
+                System.out.print(" | " + aika);
+                System.out.print(" | ID: " + userID);
+                System.out.format(" | Nimi: %-20s", name);
+                System.out.print(" | Ovi: " + oviID);
+                System.out.println(" | Tapahtuma: " + event);
+
+            }
+
+            //3. VALINTA TALLENNUS ALKAA:
+            System.out.println("\nTallennetaanko? k/e");
+            Scanner scanner5 = new Scanner(System.in);
+            String tallennusOvi;
+            tallennusOvi = scanner5.nextLine();
+
+            switch (tallennusOvi) {
+                case "k":
+                    //Tallennus kuten aiemmin                   
+                    haeOvi = conn.prepareStatement("SELECT log_number, aika, ovi_ID, user_ID, name, event  FROM kuti.tapahtumat WHERE ovi_ID=?");
+                    haeOvi.setString(1, Ovi_in);
+                    rs = haeOvi.executeQuery();
+
+                     {
+                        try (BufferedWriter out = new BufferedWriter(new FileWriter(tapahtumat_by_ID))) {
+                            while (rs.next()) {
+                            out.write(" " + String.format("%04d", rs.getInt("log_number")));
+                            out.write(" | " + rs.getString("aika"));
+                            out.write(" | ID: " + rs.getInt("user_ID"));
+                            out.write(" | Nimi: " + String.format("%-20s", rs.getString("name")));
+                            out.write(" | Ovi: " + rs.getString("ovi_ID"));
+                            out.write(" | Tapahtuma: " + rs.getInt("event"));
+                            out.newLine();
+                            }
+                            for (int i = 0; i < 50; ++i) {
+                                System.out.println();
+                            }
+                            System.out.println("Tallennettu");
+
+                        }
+                    }
+                    //Tallennus tapahtui tapahtumat_temp.txt tiedostoon, seuraavilla riveillä tiedosto nimetään oven mukaan
+                    //Esim tapahtumat_1001.txt 
+                    Path yourFile = Paths.get("tapahtumat_temp.txt");
+                     {
+
+                        Files.move(yourFile, yourFile.resolveSibling("tapahtumat_" + Ovi_in + ".txt"), REPLACE_EXISTING);
+                    }
+
+                    break;
+                case "e":
+                    break;
+                default:
+                    System.out.println("Tuntematon valinta");
+            }
+            //3.VALINTA TALLENNUS PÄÄTTYY 
+
+        } catch (SQLException ex) {
+            // handle any errors
+            sqlMesg = "SQLException: " + ex.getMessage();
+            sqlState = "SQLState: " + ex.getSQLState();
+            vendorError = "VendorError: " + ex.getErrorCode();
+        } finally {
+            // it is a good idea to release
+            // resources in a finally{} block
+            // in reverse-order of their creation
+            // if they are no-longer needed
+
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException sqlEx) {
+                } // ignore
+
+                rs = null;
+            }
+
+            if (stmt != null) {
+                try {
+                    stmt.close();
+                } catch (SQLException sqlEx) {
+                } // ignore
+
+                stmt = null;
+            }
+        }
+
+    }
+
+    //VALINTA AJAN MUKAAN, KESKEN
+    
+    public void kyselyTapahtumatByAika(String Aika_in) throws SQLException, IOException {
+
+        loadDriver();
+        try {
+
+            PreparedStatement haeAika = conn.prepareStatement("SELECT log_number, aika, ovi_ID, user_ID, name, event  FROM kuti.tapahtumat WHERE aika BETWEEN ? AND ?");
+
+            haeAika.setString(1, Aika_in + " 00:00.000000");
+            haeAika.setString(2, Aika_in + " 23:59.000000");
+            rs = null;
+            rs = haeAika.executeQuery();
+
+            while (rs.next()) {
+                //Haku sarakkeiden nimellä
+                int log_number = rs.getInt("log_number");
+                String aika = rs.getString("aika");
+                int userID = rs.getInt("user_ID");
+                String oviID = rs.getString("ovi_ID");
+                String name = rs.getString("name");
+                int event = rs.getInt("event");
+
+                //Tulostus tuttuun tapaan
+                System.out.print(String.format("%04d", log_number));
+                System.out.print(" | " + aika);
+                System.out.print(" | ID: " + userID);
+                System.out.format(" | Nimi: %-20s", name);
+                System.out.print(" | Ovi: " + oviID);
+                System.out.println(" | Tapahtuma: " + event);
+
+            }
+
+            //3. VALINTA TALLENNUS ALKAA:
+            System.out.println("\nTallennetaanko? k/e");
+            Scanner scanner6 = new Scanner(System.in);
+            String tallennusAika;
+            tallennusAika = scanner6.nextLine();
+
+            switch (tallennusAika) {
+                case "k":
+                    //Tallennus kuten aiemmin                   
+                    haeAika = conn.prepareStatement("SELECT log_number, aika, ovi_ID, user_ID, name, event  FROM kuti.tapahtumat WHERE aika BETWEEN ? AND ?");                   
+                    haeAika.setString(1, Aika_in + " 00:00.000000");
+                    haeAika.setString(2, Aika_in + " 23:59.000000");                 
+                    rs = haeAika.executeQuery();                   
+                     {
+                        try (BufferedWriter out = new BufferedWriter(new FileWriter(tapahtumat_by_ID))) {
+                            while (rs.next()) {
+                            out.write(" " + String.format("%04d", rs.getInt("log_number")));
+                            out.write(" | " + rs.getString("aika"));
+                            out.write(" | ID: " + rs.getInt("user_ID"));
+                            out.write(" | Nimi: " + String.format("%-20s", rs.getString("name")));
+                            out.write(" | Ovi: " + rs.getString("ovi_ID"));
+                            out.write(" | Tapahtuma: " + rs.getInt("event"));
+                            out.newLine();
+                            }
+                            for (int i = 0; i < 50; ++i) {
+                                System.out.println();
+                            }
+                            System.out.println("Tallennettu");
+
+                        }
+                    }
+                    //Tallennus tapahtui tapahtumat_temp.txt tiedostoon, seuraavilla riveillä tiedosto nimetään oven mukaan
+                    //Esim tapahtumat_1001.txt 
+                    Path yourFile = Paths.get("tapahtumat_temp.txt");
+                     {
+
+                        Files.move(yourFile, yourFile.resolveSibling("tapahtumat_" + Aika_in + ".txt"), REPLACE_EXISTING);
+                    }
+
+                    break;
+                case "e":
+                    break;
+                default:
+                    System.out.println("Tuntematon valinta");
+            }
+
+            //3.VALINTA TALLENNUS PÄÄTTYY 
+
+        } catch (SQLException ex) {
+            // handle any errors
+            sqlMesg = "SQLException: " + ex.getMessage();
+            sqlState = "SQLState: " + ex.getSQLState();
+            vendorError = "VendorError: " + ex.getErrorCode();
+        } finally {
+            // it is a good idea to release
+            // resources in a finally{} block
+            // in reverse-order of their creation
+            // if they are no-longer needed
+
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException sqlEx) {
+                } // ignore
+
+                rs = null;
+            }
+
+            if (stmt != null) {
+                try {
+                    stmt.close();
+                } catch (SQLException sqlEx) {
+                } // ignore
+
+                stmt = null;
+            }
+        }
 }
+    }
+

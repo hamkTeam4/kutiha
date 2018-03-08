@@ -9,13 +9,18 @@ Ominaisuudet:
 - Tallentaa luotuja raportteja .txt-tiedostoon
   - Tallennetut raportit menevät java-projektin kansioon
 
-MASTER TODO:
-- Exceliin vienti? Ei vaikuttanut nopealla tutkimuksella kovinkaan helpolle. .csv-muotoon saa kyllä tallennettua mutta ei saa järkevästi käyttämään excel-taulukoita
-
-
 CHANGELOG
 
-0.11
+0.1
+KUTIHA:n ensimmäinen versio
+Ominaisuudet:
+- Yksinkertainen switch-case-käyttöliittymä konsolilla
+- Näyttää kaikki käyttäjätiedot
+- Tulostaa tapahtumat
+- Tallentaa luotuja raportteja .txt-tiedostoon
+  -- Tallennetut raportit menevät java-projektin kansioon
+
+0.1.1
 - Päivitetty  tukemaan uusinta tietokannan versiota
 - Aloitettu tekemään hakua henkilön perusteella
 - Nimetty haku rfid:n mukaan uudelleen
@@ -37,10 +42,23 @@ CHANGELOG
 
 0.8.1
 - Kaikki printtaukset ja tallennukset formatoituu nyt oikein
+<<<<<<< HEAD
 	- Nimille varataan tila
 	- event_id:t saavat alkuun nollat
 - Uusi switch 6: printtaa README.md:n projektin juuresta
 
 TODO: 
 - Eipä kait mittään.
+=======
+	-- Nimille varataan tila
+	-- event_id:t saavat alkuun nollat
+	
+0.9
+- Lisätty haku ovien mukaan
+
+1.0
+- Lisätty haku päivämäärän mukaan
+	-- Listaa yhden vuorokauden tapahtumat
+- Siivottu koodia
+>>>>>>> test
 
